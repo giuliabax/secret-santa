@@ -15,8 +15,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Colore Primario (Verde Natale) */
-    --primary: 140 70% 35%;
+  /* Colore Primario (Rosso Natale) */
+  --primary: 0 72% 45%;
     --primary-foreground: 0 0% 100%;
 
     /* Colore Secondario (Grigio chiaro) */
@@ -36,7 +36,7 @@
     /* Definizioni per le classi */
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 140 70% 35%;
+  --ring: 0 72% 45%;
     --radius: 0.5rem;
   }
  
