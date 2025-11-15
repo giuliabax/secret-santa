@@ -1,9 +1,10 @@
-// server.js
-require('dotenv').config();
-const express = require('express');
-const nodemailer = require('nodemailer');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import nodemailer from 'nodemailer';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
