@@ -313,8 +313,24 @@ export default function HomePage() {
       </div>
       
       {/* Footer fisso in basso */}
-      <div className="absolute bottom-2 text-xs text-gray-500 flex items-center gap-2 justify-center">
+      <div className="absolute bottom-2 text-s text-gray-500 flex items-center gap-2 justify-center">
         <span>Realized by Giulia Bax</span>
+        <a
+          href="https://github.com/giuliabax"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-400 hover:text-gray-900 transition-colors"
+          aria-label="GitHub profile of Giulia Bax"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-4 h-4"
+            aria-hidden="true">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.744.083-.729.083-.729 1.205.085 1.84 1.236 1.84 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.76-1.605-2.665-.305-5.467-1.332-5.467-5.93 0-1.31.468-2.381 1.235-3.221-.135-.303-.54-1.526.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.65.24 2.873.12 3.176.765.84 1.23 1.911 1.23 3.221 0 4.61-2.805 5.625-5.475 5.92.435.375.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+          </svg>
+        </a>
         <a
           href="https://www.linkedin.com/in/giulia-bax-31014a239?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
           target="_blank"
@@ -326,7 +342,7 @@ export default function HomePage() {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="w-3 h-3"
+            className="w-4 h-4"
             aria-hidden="true"
           >
             <path d="M19 0h-14c-2.8 0-5 2.2-5 5v14c0 2.8 2.2 5 5 5h14c2.8 0 5-2.2 5-5v-14c0-2.8-2.2-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.3c-1 0-1.8-0.8-1.8-1.8s0.8-1.8 1.8-1.8c1 0 1.8 0.8 1.8 1.8s-0.8 1.8-1.8 1.8zm13.5 10.3h-3v-4.5c0-1.1-0.9-2-2-2s-2 0.9-2 2v4.5h-3v-9h3v1.2c0.8-0.9 2.1-1.7 3.8-1.7 2.5 0 4.2 1.6 4.2 5v4.5z" />
