@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
 import nodemailer from 'nodemailer';
+import { writeFile } from 'fs/promises';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
@@ -14,23 +15,34 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Configurazione del trasportatore email
-const createTransporter = () => {
-    // Usa variabili d'ambiente se disponibili, altrimenti usa i valori hardcoded
-    const emailUser = process.env.EMAIL_USER || 'giulibax@gmail.com';
-    const emailPass = process.env.EMAIL_PASS || 'gbfe mlxa khod cwhe';
-    
-    if (!emailUser || !emailPass) {
-        console.error('⚠️  ATTENZIONE: Credenziali email non configurate!');
-        console.error('   Crea un file .env con EMAIL_USER e EMAIL_PASS');
+// Transporter helper: preferisci usare variabili d'ambiente per il server SMTP
+// If not provided, fall back to an Ethereal test account (development only).
+const getTransporter = async () => {
+    const emailHost = process.env.EMAIL_HOST;
+    const emailPort = process.env.EMAIL_PORT ? parseInt(process.env.EMAIL_PORT, 10) : undefined;
+    const emailSecure = process.env.EMAIL_SECURE === 'true';
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+
+    if (emailHost && emailUser && emailPass) {
+        // Use explicit SMTP settings from environment
+        return nodemailer.createTransport({
+            host: emailHost,
+            port: emailPort || 587,
+            secure: !!emailSecure,
+            auth: { user: emailUser, pass: emailPass }
+        });
     }
-    
+
+    // Otherwise create an Ethereal test account (no real emails sent)
+    console.warn('⚠️  SMTP credentials not found in environment. Using Ethereal test account (dev only).');
+    const testAccount = await nodemailer.createTestAccount();
+    console.log('Ethereal account created - preview emails at runtime.');
     return nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'giulibax@gmail.com',
-            pass: 'fnkh wnlc wmxz vnte' // App password di Gmail
-        }
+        host: testAccount.smtp.host,
+        port: testAccount.smtp.port,
+        secure: testAccount.smtp.secure,
+        auth: { user: testAccount.user, pass: testAccount.pass }
     });
 };
 
@@ -95,14 +107,14 @@ app.post('/api/send-emails', async (req, res) => {
         });
     }
     
-    const transporter = createTransporter();
+    const transporter = await getTransporter();
     const results = [];
-    
+
     for (const assignment of assignments) {
         const { santa, receiver } = assignment;
-        
+
         const mailOptions = {
-            from: 'giulibax@gmail.com',
+            from: process.env.EMAIL_FROM || (process.env.EMAIL_USER || 'no-reply@example.com'),
             to: santa.email,
             subject: '🎅 Il tuo Secret Santa!',
             html: `
@@ -141,15 +153,18 @@ app.post('/api/send-emails', async (req, res) => {
                 </div>
             `
         };
-        
+
         try {
-            await transporter.sendMail(mailOptions);
+            const info = await transporter.sendMail(mailOptions);
+            const preview = nodemailer.getTestMessageUrl(info);
             results.push({ 
                 success: true, 
                 santa: santa.name,
-                receiver: receiver.name 
+                receiver: receiver.name,
+                preview: preview || null
             });
             console.log(`✓ Email inviata a ${santa.name} (destinatario: ${receiver.name})`);
+            if (preview) console.log(`  › Preview URL: ${preview}`);
         } catch (error) {
             results.push({ 
                 success: false, 
@@ -161,6 +176,20 @@ app.post('/api/send-emails', async (req, res) => {
     }
     
     const successCount = results.filter(r => r.success).length;
+
+    // Persist assignments + results to assignments.json for later inspection
+    try {
+        const out = {
+            timestamp: new Date().toISOString(),
+            assignments,
+            results
+        };
+        await writeFile(new URL('./assignments.json', import.meta.url), JSON.stringify(out, null, 2), 'utf8');
+        console.log('Saved assignments and results to assignments.json');
+    } catch (err) {
+        console.error('Failed to write assignments.json:', err.message);
+    }
+
     res.json({ 
         success: true,
         message: `${successCount}/${assignments.length} email inviate con successo`,
