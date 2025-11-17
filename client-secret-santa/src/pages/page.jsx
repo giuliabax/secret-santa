@@ -237,9 +237,27 @@ export default function HomePage() {
           </Card>
         </div>
       </div>
-
-      {/* 'by Ciambelle' in basso a destra della pagina */}
-      {/* <div className="fixed bottom-4 right-4 text-sm text-gray-500">by Ciambelle</div> */}
+      <div className="fixed bottom-4 text-sm text-gray-500 flex items-center gap-2">
+        <span>Realized by Giulia Bax</span>
+        {/* LinkedIn icon: update the href if you want a different profile URL */}
+        <a
+          href="https://www.linkedin.com/in/giulia-bax-31014a239?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-400 hover:text-blue-600 transition-colors"
+          aria-label="LinkedIn profile of Giulia Bax"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-4 h-4"
+            aria-hidden="true"
+          >
+            <path d="M19 0h-14c-2.8 0-5 2.2-5 5v14c0 2.8 2.2 5 5 5h14c2.8 0 5-2.2 5-5v-14c0-2.8-2.2-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.3c-1 0-1.8-0.8-1.8-1.8s0.8-1.8 1.8-1.8c1 0 1.8 0.8 1.8 1.8s-0.8 1.8-1.8 1.8zm13.5 10.3h-3v-4.5c0-1.1-0.9-2-2-2s-2 0.9-2 2v4.5h-3v-9h3v1.2c0.8-0.9 2.1-1.7 3.8-1.7 2.5 0 4.2 1.6 4.2 5v4.5z" />
+          </svg>
+        </a>
+      </div>
     </div>
   );
 }
