@@ -197,6 +197,19 @@ app.post('/api/send-emails', async (req, res) => {
     });
 });
 
+// Endpoint per verificare la configurazione SMTP (non espone credenziali)
+app.get('/api/verify-smtp', async (req, res) => {
+    try {
+        const transporter = await getTransporter();
+        // transporter.verify will attempt to connect and authenticate
+        await transporter.verify();
+        return res.json({ success: true, message: 'SMTP verification succeeded' });
+    } catch (err) {
+        console.error('SMTP verification failed:', err && err.message ? err.message : err);
+        return res.status(500).json({ success: false, error: 'SMTP verification failed', details: err && err.message ? err.message : String(err) });
+    }
+});
+
 // Avvia il server
 app.listen(PORT, () => {
     console.log(`🎅 Server Secret Santa avviato su http://localhost:${PORT}`);
