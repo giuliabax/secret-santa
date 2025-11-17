@@ -14,7 +14,7 @@ function App() {
         <Navbar />
 
         {/* --- CONTENUTO PRINCIPALE --- */}
-        <main className="flex-grow bg-gray-100 p-4 flex justify-center items-center">
+        <main className="flex-grow p-4 flex justify-center items-center">
           <Routes>
             <Route path="/" element={<Home />} />
           </Routes>

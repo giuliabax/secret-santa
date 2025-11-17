@@ -50,6 +50,15 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    /* Background image (falls back to --background color) */
+    background-image: url('/christmas-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+  html, body, #root {
+    min-height: 100vh;
   }
 }

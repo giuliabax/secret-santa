@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 import { Send, Gift, Loader2, Users, ArrowRight } from 'lucide-react';
 
 // URL del tuo server backend Express
-const BACKEND_URL = 'http://localhost:3001';
+const BACKEND_URL = 'http://localhost:3000';
 const MAX_PARTICIPANTS = 20;
 
 export default function HomePage() {
@@ -112,17 +112,35 @@ export default function HomePage() {
     // Contenitore principale: immagine sopra la card, card centrata
     <div className="flex flex-col items-center w-full max-w-5xl mx-auto -mt-48 py-8">
 
-      {/* Immagine sovrapposta alla card */}
-      <div className="-mb-14 z-10">
-        <img
-          src="/santa-claus.png"
-          alt="Illustrazione Secret Santa"
-          className="w-64 md:w-80 lg:w-96 object-contain mx-auto"
-        />
-      </div>
+      {/* Immagini e Card: contenitore relativo per piazzare Rudolf negli angoli superiori della card */}
+      <div className="relative w-full flex justify-center -mb-14">
+        <div className="relative w-full max-w-2xl flex items-start justify-center">
+          {/* Santa: rimane centrato sopra la card e si nasconde sotto la card allo step 2 */}
+          <img
+            src="/santa-claus.png"
+            alt="Santa"
+            className={`absolute left-1/2 -translate-x-1/2 transition-all duration-500 ease-in-out transform pointer-events-none ${step === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+            style={{ zIndex: step === 1 ? 50 : 0, top: '-13.5rem', width: 'auto', height: '24rem' }}
+          />
 
-      {/* Card centrata */}
-      <Card className="w-full max-w-2xl shadow-lg mx-auto relative">
+          {/* Rudolf sinistra: entra da sinistra verso l'angolo superiore sinistro della card */}
+          <img
+            src="/rudolf-sx.png"
+            alt="Rudolf left"
+            className={`absolute -top-8 left-4 object-contain transition-all duration-500 ease-in-out transform ${step === 2 ? 'opacity-100 translate-x-0 delay-300' : 'opacity-0 -translate-x-24'}`}
+            style={{ zIndex: step === 2 ? 40 : 0, width: '10rem', height: 'auto', top: '0rem', left: '-2rem' }}
+          />
+
+          {/* Rudolf destra: entra da destra verso l'angolo superiore destro della card */}
+          <img
+            src="/rudolf-dx.png"
+            alt="Rudolf right"
+            className={`absolute -top-8 right-4 object-contain transition-all duration-500 ease-in-out transform ${step === 2 ? 'opacity-100 translate-x-0 delay-300' : 'opacity-0 translate-x-24'}`}
+            style={{ zIndex: step === 2 ? 40 : 0, width: '10rem', height: 'auto',top: '0rem', right: '-2rem' }}
+          />
+
+          {/* Card centrata */}
+          <Card className={`w-full max-w-2xl shadow-lg mx-auto relative transform transition-all duration-500 origin-top ${step === 1 ? 'translate-y-28' : 'translate-y-12'} ${step === 2 ? 'scale-105' : 'scale-100'}`} style={{ zIndex: 30 }}>
         
         <CardHeader className="text-center">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary mb-4">
@@ -139,7 +157,7 @@ export default function HomePage() {
               <Label htmlFor="num-participants" className="text-lg">
                 Quanti partecipano?
               </Label>
-              <Select onValueChange={handleNumberChange}>
+                  <Select value={numParticipants ? numParticipants.toString() : undefined} onValueChange={handleNumberChange}>
                 <SelectTrigger id="num-participants" className="w-full text-base py-6">
                   <SelectValue placeholder="Seleziona un numero..." />
                 </SelectTrigger>
@@ -216,10 +234,12 @@ export default function HomePage() {
             </CardFooter>
           </>
         )}
-      </Card>
+          </Card>
+        </div>
+      </div>
 
       {/* 'by Ciambelle' in basso a destra della pagina */}
-      <div className="fixed bottom-4 right-4 text-sm text-gray-500">by Ciambelle</div>
+      {/* <div className="fixed bottom-4 right-4 text-sm text-gray-500">by Ciambelle</div> */}
     </div>
   );
 }
