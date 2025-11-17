@@ -20,7 +20,15 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Send, Gift, Loader2, Users, ArrowRight, Check } from 'lucide-react';
+import { Send, Gift, Loader2, Users, ArrowRight, Check, InfoIcon } from 'lucide-react';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from '@/components/ui/input-group';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 // URL del tuo server backend Express
 const BACKEND_URL = 'http://localhost:3000';
@@ -35,13 +43,23 @@ export default function HomePage() {
   const [sendResults, setSendResults] = useState(null);
 
   const handleNumberChange = (value) => {
-    const num = parseInt(value, 10);
+    // Allow clearing the input
+    if (value === '' || value === null || typeof value === 'undefined') {
+      setNumParticipants(0);
+      setParticipants([]);
+      return;
+    }
+    const parsed = parseInt(value, 10);
+    const num = Number.isNaN(parsed) ? 0 : Math.max(0, parsed);
+    // Allow the user to enter numbers greater than MAX_PARTICIPANTS, but only
+    // create the participants array when the number is within the allowed range.
     setNumParticipants(num);
-    setParticipants(
-      Array(num)
-        .fill()
-        .map(() => ({ name: '', email: '' }))
-    );
+    if (num > 0 && num <= MAX_PARTICIPANTS) {
+      setParticipants(Array(num).fill().map(() => ({ name: '', email: '' })));
+    } else {
+      // don't create a huge participants array when the user types an out-of-range number
+      setParticipants([]);
+    }
   };
 
   const handleParticipantChange = (index, field, value) => {
@@ -53,6 +71,10 @@ export default function HomePage() {
   const goToStep2 = () => {
     if (numParticipants < 3) {
       toast.error('Devi selezionare almeno 3 partecipanti.');
+      return;
+    }
+    if (numParticipants > MAX_PARTICIPANTS) {
+      toast.error(`Numero massimo partecipanti: ${MAX_PARTICIPANTS}.`);
       return;
     }
     setStep(2);
@@ -117,28 +139,28 @@ export default function HomePage() {
           <img
             src="/santa-claus.png"
             alt="Santa"
-            className={`absolute left-1/2 -translate-x-1/2 transition-all duration-500 ease-in-out transform pointer-events-none ${step === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
-            style={{ zIndex: step === 1 ? 50 : 0, top: '-13.5rem', width: 'auto', height: '24rem' }}
+            className={`absolute left-1/2 -translate-x-1/2 transition-all duration-500 ease-in-out transform pointer-events-none ${step === 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} top-[-6.5rem] md:top-[-13.5rem] h-44 md:h-[24rem] w-auto`}
+            style={{ zIndex: step === 1 ? 50 : 0 }}
           />
 
           {/* Rudolf sinistra: entra da sinistra verso l'angolo superiore sinistro della card */}
           <img
             src="/rudolf-sx.png"
             alt="Rudolf left"
-            className={`absolute -top-8 left-4 object-contain transition-all duration-500 ease-in-out transform ${step === 2 ? 'opacity-100 translate-x-0 delay-300' : 'opacity-0 -translate-x-24'}`}
-            style={{ zIndex: step === 2 ? 40 : 0, width: '10rem', height: 'auto', top: '0rem', left: '-2rem' }}
+            className={`absolute -top-4 left-0 sm:left-4 object-contain transition-all duration-500 ease-in-out transform ${step === 2 ? 'opacity-100 translate-x-0 delay-300' : 'opacity-0 -translate-x-24'} w-28 sm:w-40`}
+            style={{ zIndex: step === 2 ? 40 : 0 }}
           />
 
           {/* Rudolf destra: entra da destra verso l'angolo superiore destro della card */}
           <img
             src="/rudolf-dx.png"
             alt="Rudolf right"
-            className={`absolute -top-8 right-4 object-contain transition-all duration-500 ease-in-out transform ${step === 2 ? 'opacity-100 translate-x-0 delay-300' : 'opacity-0 translate-x-24'}`}
-            style={{ zIndex: step === 2 ? 40 : 0, width: '10rem', height: 'auto',top: '0rem', right: '-2rem' }}
+            className={`absolute -top-4 right-0 sm:right-4 object-contain transition-all duration-500 ease-in-out transform ${step === 2 ? 'opacity-100 translate-x-0 delay-300' : 'opacity-0 translate-x-24'} w-28 sm:w-40`}
+            style={{ zIndex: step === 2 ? 40 : 0 }}
           />
 
     {/* Card centrata */}
-          <Card className={`w-full max-w-2xl shadow-lg mx-auto relative transform transition-all duration-500 origin-top ${step === 1 ? 'translate-y-28' : 'translate-y-12'} ${step === 2 ? 'scale-105' : 'scale-100'}`} style={{ zIndex: 30 }}>
+          <Card className={`w-full max-w-md md:max-w-2xl shadow-lg mx-auto relative transform transition-all duration-500 origin-top ${step === 1 ? 'translate-y-12 md:translate-y-28' : 'translate-y-8 md:translate-y-12'} ${step === 2 ? 'md:scale-105 scale-100' : 'scale-100'}`} style={{ zIndex: 30 }}>
         
         <CardHeader className="text-center">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-primary mb-4">
@@ -155,7 +177,7 @@ export default function HomePage() {
               <Label htmlFor="num-participants" className="text-lg">
                 Quanti partecipano?
               </Label>
-                  <Select value={numParticipants ? numParticipants.toString() : undefined} onValueChange={handleNumberChange}>
+                  {/* <Select value={numParticipants ? numParticipants.toString() : undefined} onValueChange={handleNumberChange}>
                 <SelectTrigger id="num-participants" className="w-full text-base py-6">
                   <SelectValue placeholder="Seleziona un numero..." />
                 </SelectTrigger>
@@ -168,9 +190,39 @@ export default function HomePage() {
                     )
                   )}
                 </SelectContent>
-              </Select>
+              </Select> */}
+                <InputGroup>
+                  <InputGroupInput
+                    type="number"
+                    min={3}
+                    max={MAX_PARTICIPANTS}
+                    placeholder="partecipanti"
+                    className="!pl-1"
+                    value={numParticipants || ''}
+                    onChange={(e) => handleNumberChange(e.target.value)}
+                  />
+                  <InputGroupAddon>
+                    <InputGroupText>n.</InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupAddon align="inline-end">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InputGroupButton className="rounded-full" size="icon-xs">
+                          <InfoIcon />
+                        </InputGroupButton>
+                      </TooltipTrigger>
+                      <TooltipContent>Inserisci un numero tra 3 e {MAX_PARTICIPANTS}</TooltipContent>
+                    </Tooltip>
+                  </InputGroupAddon>
+                </InputGroup>
+                {numParticipants > 0 && numParticipants < 3 && (
+                  <p className="text-sm text-red-500 mt-2">Devi inserire almeno 3 partecipanti.</p>
+                )}
+                {numParticipants > MAX_PARTICIPANTS && (
+                  <p className="text-sm text-red-500 mt-2">Numero massimo partecipanti: {MAX_PARTICIPANTS}.</p>
+                )}
             </div>
-            <Button onClick={goToStep2} className="w-full" size="lg" disabled={numParticipants < 3}>
+            <Button onClick={goToStep2} className="w-full" size="lg" disabled={numParticipants < 3 || numParticipants > MAX_PARTICIPANTS}>
               Prosegui <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </CardContent>

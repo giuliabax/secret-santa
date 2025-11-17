@@ -62,3 +62,15 @@
     min-height: 100vh;
   }
 }
+
+/* Remove number input spinner arrows for the input-group control so users can type freely */
+input[data-slot="input-group-control"][type="number"]::-webkit-outer-spin-button,
+input[data-slot="input-group-control"][type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[data-slot="input-group-control"][type="number"] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield;
+}
