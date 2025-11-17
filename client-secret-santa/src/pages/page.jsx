@@ -31,7 +31,8 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 // URL del tuo server backend Express
-const BACKEND_URL = 'http://localhost:3000';
+//const BACKEND_URL = 'http://localhost:3000';
+const BACKEND_URL = 'https://secret-santa-zeta-ten.vercel.app/';
 const MAX_PARTICIPANTS = 20;
 
 export default function HomePage() {
