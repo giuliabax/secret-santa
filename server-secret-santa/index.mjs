@@ -127,7 +127,7 @@ app.post('/api/send-emails', async (req, res) => {
                         <p style="font-size: 18px; color: #333;">Ciao <strong>${santa.name}</strong>! 👋</p>
                         
                         <p style="font-size: 16px; color: #666; line-height: 1.6;">
-                            È arrivato il momento tanto atteso! Quest'anno il tuo Secret Santa è...
+                            È arrivato il momento tanto atteso! Quest'anno sei il Secret Santa di...
                         </p>
                         
                         <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 25px; border-radius: 10px; margin: 25px 0; text-align: center; border: 2px solid #fbbf24;">
@@ -137,7 +137,7 @@ app.post('/api/send-emails', async (req, res) => {
                         </div>
                         
                         <p style="font-size: 16px; color: #666; line-height: 1.6;">
-                            Ricorda: questo è un segreto! Non rivelare a nessuno chi è il tuo Secret Santa. 🤫
+                            Ricorda: questo è un segreto! 🤫
                         </p>
                         
                         <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; text-align: center;">
