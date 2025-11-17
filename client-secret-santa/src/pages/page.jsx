@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Send, Gift, Loader2, Users, ArrowRight } from 'lucide-react';
+import { Send, Gift, Loader2, Users, ArrowRight, Check } from 'lucide-react';
 
 // URL del tuo server backend Express
 const BACKEND_URL = 'http://localhost:3000';
@@ -32,6 +32,7 @@ export default function HomePage() {
   const [numParticipants, setNumParticipants] = useState(0);
   const [participants, setParticipants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [sendResults, setSendResults] = useState(null);
 
   const handleNumberChange = (value) => {
     const num = parseInt(value, 10);
@@ -92,12 +93,9 @@ export default function HomePage() {
       });
       const sendData = await sendResponse.json();
       if (!sendResponse.ok) throw new Error(sendData.error);
-      toast.success(sendData.message || 'Email inviate con successo! 🎅');
-
-      // Reset
-      setStep(1);
-      setNumParticipants(0);
-      setParticipants([]);
+      // Show success step with results; allow user to return to start manually
+      setSendResults(sendData);
+      setStep(3);
     } catch (error) {
       console.error('Errore nel processo:', error);
       toast.error(error.message);
@@ -139,7 +137,7 @@ export default function HomePage() {
             style={{ zIndex: step === 2 ? 40 : 0, width: '10rem', height: 'auto',top: '0rem', right: '-2rem' }}
           />
 
-          {/* Card centrata */}
+    {/* Card centrata */}
           <Card className={`w-full max-w-2xl shadow-lg mx-auto relative transform transition-all duration-500 origin-top ${step === 1 ? 'translate-y-28' : 'translate-y-12'} ${step === 2 ? 'scale-105' : 'scale-100'}`} style={{ zIndex: 30 }}>
         
         <CardHeader className="text-center">
@@ -230,6 +228,36 @@ export default function HomePage() {
               </Button>
               <Button variant="link" onClick={() => setStep(1)}>
                 Torna indietro
+              </Button>
+            </CardFooter>
+          </>
+        )}
+
+        {/* --- STEP 3: CONFERMA INVIO --- */}
+        {step === 3 && (
+          <>
+            <CardContent className="py-12 flex flex-col items-center justify-center gap-4">
+              <div className="p-4 rounded-full bg-green-100 text-green-600">
+                <Check className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-semibold">Mail inviate con successo</h3>
+              {sendResults && sendResults.message && (
+                <p className="text-sm text-muted-foreground">{sendResults.message}</p>
+              )}
+            </CardContent>
+            <CardFooter className="flex-col gap-3">
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={() => {
+                  // Reset to initial state
+                  setStep(1);
+                  setNumParticipants(0);
+                  setParticipants([]);
+                  setSendResults(null);
+                }}
+              >
+                Torna all'inizio
               </Button>
             </CardFooter>
           </>
