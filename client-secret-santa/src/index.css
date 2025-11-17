@@ -49,28 +49,25 @@
   * {
     @apply border-border;
   }
+  
+  html, body, #root {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+  }
+  
   body {
-    /* Background image (falls back to --background color) */
     background-image: url('/christmas-background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
-  html, body, #root {
-    min-height: 100vh;
-  }
-}
-
-/* Remove number input spinner arrows for the input-group control so users can type freely */
-input[data-slot="input-group-control"][type="number"]::-webkit-outer-spin-button,
-input[data-slot="input-group-control"][type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[data-slot="input-group-control"][type="number"] {
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield; /* Firefox */
-  appearance: textfield;
 }
